@@ -1,6 +1,6 @@
 
 
-Design by Tim O'Brien [t413.com](http://t413.com/)
+Created by [two70.net](http://two70.net/)
 &mdash;
 [SinglePaged theme](https://github.com/t413/SinglePaged)
 &mdash;

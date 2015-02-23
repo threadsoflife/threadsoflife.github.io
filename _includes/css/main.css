@@ -64,6 +64,13 @@ hr {
   border-color: {{ site.colors.black }};
 }
 
+.header {
+  font-size: 50px;
+  line-height: 50px;
+  margin-bottom: 15;
+  color: #dddddd;
+}
+
 .container { word-wrap: break-word; }
 .center { text-align: center; }
 .left, .container .left { text-align: left; }
