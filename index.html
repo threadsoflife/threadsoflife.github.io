@@ -1,8 +1,34 @@
 ---
-layout: default
----
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ site.title }}</title>
+  <meta name="keywords" content="{{ site.keywords }}">
+  <meta name="description" content="{{ site.description }}">
+  <link rel="stylesheet" href="{{ site.baseurl }}/combo.css">
+  <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  {% if site.favicon %}<link rel="shortcut icon" href="{{ site.favicon }}" type="image/x-icon">{% endif %}
+  {% if site.touch_icon %}<link rel="apple-touch-icon" href="{{ site.touch_icon }}">{% endif %}
+</head>
+<body>
+  <div id="main">
 
+    <!-- Nav section of page -->
+    <nav><ul>
+      <div class="header">Threads of Life Photography</div>
+      {% for node in site.categories.main reversed %}
+      
+        {% capture id %}{{ node.id | remove:'/' | downcase }}{% endcapture %}
+        <li class="p-{{id}}"><a href="#{{id}}">{{node.title}}</a></li>
+      
+      {% endfor %}
+    </ul></nav>
+    <!-- End of Nav -->
 
+    <!-- Content of page -->
     {% for page in site.categories.main reversed %}
       {% capture id %}{{ page.id | remove:'/' | downcase }}{% endcapture %}
       <div id="{{id}}" class="section p-{{id}}">
@@ -22,32 +48,53 @@ layout: default
         {% endif %}
         <div class="container {{ page.style }}">
           {{ page.content }}
+
+          <!-- Dynamically load blog posts from links without refreshing page -->
           {% if page.title == "blog" %}
             <div class="row-fluid">
               <div class="span2" id="sidebar">
-                <h2>Sidebar</h2>
+                <h2>Blogs</h2>
                 {% for post in site.categories.posts reversed %}
                 <a href="#{{id}}" onclick="displayPost('{{post.title || slugify }}')">{{ post.date | date_to_string }}</a><br>
-                  
                 {% endfor %}
               </div>
               <div id="blog_main" class="span10">
               </div>
             </div>
           {% endif %}
+          <!-- End of blog section -->
+
         </div>
       </div>
     {% endfor %}
-    <script type="text/javascript">
-      function displayPost(link) {
-        var json_stuff = "";
-        json_stuff = {{ site.categories.posts | jsonify }};
-        for (var i = 0; i < json_stuff.length; i++) {
-          if (json_stuff[i].search(link) + 1)
-            var output = json_stuff[i];
-        }
-        document.getElementById("blog_main").innerHTML = output;
-        
-        //alert(typeof json_stuff);
-      }
-    </script>
+    <!-- End of Content -->
+
+    <!-- Footer section -->
+    <div id="footer" class="section text-white">
+      <div class="container">
+        {% capture foottext %} {% include footer.md %} {% endcapture %}
+        {{ foottext | markdownify }}
+      </div>
+    </div>
+  </div>
+  <!-- End of Footer -->
+
+{% include analytics.html %}
+</body>
+
+<script type="text/javascript">
+  function displayPost(link) {
+    var json_stuff = "";
+    json_stuff = {{ site.categories.posts | jsonify }};
+    for (var i = 0; i < json_stuff.length; i++) {
+      if (json_stuff[i].search(link) + 1)
+        var output = json_stuff[i];
+    }
+    document.getElementById("blog_main").innerHTML = output;
+    
+    //alert(typeof json_stuff);
+  }
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="site.js"></script>
+</html>
