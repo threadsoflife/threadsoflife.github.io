@@ -55,7 +55,7 @@
               <div class="span2" id="sidebar">
                 <h2>Blogs</h2>
                 {% for post in site.categories.posts reversed %}
-                <a href="#{{id}}" onclick="displayPost('{{post.title || slugify }}')">{{ post.date | date_to_string }}</a><br>
+                <a href="#{{id}}" onclick="displayPost('{{ post.title }}')">{{ post.date | date_to_string }}</a><br>
                 {% endfor %}
               </div>
               <div id="blog_main" class="span10">
@@ -63,6 +63,21 @@
             </div>
           {% endif %}
           <!-- End of blog section -->
+
+          <!-- Picture portfolio section -->
+          {% if page.title == "portfolio" %}
+            <div class="row-fluid">
+              <div class="span2" id="sidebar2">
+                <h2>Styles</h2>
+                {% for post in site.categories.portfolio reversed %}
+                <a href="#{{id}}" onclick="displayPictures('{{ post.title }}')">{{ post.title }}</a><br>
+                {% endfor %}
+              </div>
+              <div id="port_main" class="span10">
+              </div>
+            </div>
+          {% endif %}            
+          <!-- End of portfolio section -->
 
         </div>
       </div>
@@ -83,16 +98,30 @@
 </body>
 
 <script type="text/javascript">
-  function displayPost(link) {
+  function displayPost(data) {
     var json_stuff = "";
-    json_stuff = {{ site.categories.posts | jsonify }};
-    for (var i = 0; i < json_stuff.length; i++) {
-      if (json_stuff[i].search(link) + 1)
-        var output = json_stuff[i];
+    {% for post in site.categories.posts %}
+    if ( "{{ post.title }}" == data ) {
+      json_stuff = {{ post.content | jsonify }};
+    }    
+    {% endfor %}
+    document.getElementById("blog_main").innerHTML = json_stuff;
+  }
+  function displayPictures(data) {
+    var json_stuff = "";
+    {% for pic in site.categories.portfolio %}
+    if ( "{{ pic.title }}" == data ) {
+      json_stuff = {{ pic.content | jsonify }};
+    }    
+    {% endfor %}
+    var pic_string = json_stuff.replace("<p>", "");
+    var pic_string = pic_string.replace("</p>", "");
+    var pic_array = pic_string.split(",");
+    for (var i = 0; i < pic_array.length; i++) {
+      pic_array[i] = "<img src=\"img/" + data + "/" + pic_array[i] + "\"style=\"height:400px\">";
+      //alert(pic_array[i]);
     }
-    document.getElementById("blog_main").innerHTML = output;
-    
-    //alert(typeof json_stuff);
+    document.getElementById("port_main").innerHTML = pic_array;
   }
 </script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
